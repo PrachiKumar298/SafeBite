@@ -1,0 +1,61 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* src/index.css or global css */
+:root.safebite-light {
+  --sb-bg: #EBE1D1;         /* page bg (new palette) */
+  --sb-card: #FFFFFF;       /* card bg (keep white for contrast) */
+  --sb-accent: #41644A;     /* primary green */
+  --sb-accent-2: #E9762B;   /* secondary accent (calls-to-action) */
+  --sb-text: #0D4715;       /* dark green text */
+  --sb-muted: #6B6B6B;
+  --sb-button-text: #ffffff;
+  --sb-border: #DCD6CC;
+}
+
+:root.safebite-dark {
+  --sb-bg: #0A0F1F;         /* deep navy */
+  --sb-card: #111827;       /* near-black */
+  --sb-accent: #3B82F6;     /* blue-500 */
+  --sb-text: #F8FAFC;       /* light text */
+  --sb-muted: #9CA3AF;
+  --sb-button-text: #ffffff;
+  --sb-border: #1F2937;
+}
+
+/* Apply backgrounds and text using variables */
+body {
+  background-color: var(--sb-bg);
+  color: var(--sb-text);
+}
+
+/* Example uses — the rest of your Tailwind classes still apply */
+.card {
+  background: var(--sb-card);
+  border: 1px solid var(--sb-border);
+  color: var(--sb-text);
+}
+
+/* Force user-entered text in form controls to be black across the app.
+   This overrides utility classes like `text-white` on inputs so typed
+   characters remain visible and consistently black. If you rely on
+   light text in dark mode for accessibility, consider tuning this.
+*/
+input,
+textarea,
+select,
+[contenteditable],
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="number"] {
+  color: #000 !important;
+  -webkit-text-fill-color: #000 !important; /* fixes autofill/Chromium */
+}
+
+/* Do not change placeholder styling here; leave placeholders to theme.
+   If you want black placeholders too, add ::placeholder rules.
+*/

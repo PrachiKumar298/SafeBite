@@ -1,0 +1,50 @@
+{
+  "peanut": [
+    "Snickers",
+    "Reese's",
+    "Peanut Butter",
+    "Peanut M&M's",
+    "PayDay Bar",
+    "Butterfinger",
+    "Peanut Cookies",
+    "Trail Mix (peanut mix)"
+  ],
+  "milk": [
+    "Oreo",
+    "KitKat",
+    "Snickers",
+    "Cadbury Dairy Milk",
+    "Ferrero Rocher",
+    "Milk Chocolate",
+    "Ice Cream"
+  ],
+  "gluten": [
+    "Bread",
+    "Pasta",
+    "Pizza",
+    "Oreo",
+    "Doritos",
+    "Pretzels"
+  ],
+  "soy": [
+    "Soy Sauce",
+    "Tofu",
+    "Soy Milk",
+    "Protein Bars",
+    "Doritos"
+  ],
+  "egg": [
+    "Mayonnaise",
+    "Cookies",
+    "Cakes",
+    "Brownies",
+    "Pancakes"
+  ],
+  "tree nut": [
+    "Nutella",
+    "Almond Chocolate",
+    "Pesto",
+    "Granola Bars",
+    "Trail Mix"
+  ]
+}
