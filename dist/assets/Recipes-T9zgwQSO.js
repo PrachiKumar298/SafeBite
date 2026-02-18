@@ -1,4 +1,4 @@
-import{c as N,s as b,u as x,r as d,R as e,B as S}from"./index-CkvtX7IP.js";import{g as M,d as C,s as L}from"./savedRecipesService-mmjPzSHR.js";import{g as I}from"./allergyService-iaoclJDK.js";/**
+import{c as N,s as b,u as x,r as d,R as e,B as S}from"./index-DtL4JJxM.js";import{g as M,d as C,s as L}from"./savedRecipesService-DbdHeRvO.js";import{g as I}from"./allergyService-C8WDpEoI.js";/**
  * @license lucide-react v0.344.0 - ISC
  *
  * This source code is licensed under the ISC license.
