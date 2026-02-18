@@ -23,7 +23,14 @@ export async function getSavedRecipes(userId) {
 /* =========================
    SAVE RECIPE
 ========================= */
-export async function saveRecipe(userId, title, thumbnail, recipeId, ingredients, instructions) {
+export async function saveRecipe(
+  userId,
+  title,
+  thumbnail,
+  recipeId,
+  ingredients,
+  instructions
+) {
   return await supabase
     .from("saved_recipes")
     .insert({
@@ -35,6 +42,7 @@ export async function saveRecipe(userId, title, thumbnail, recipeId, ingredients
       instructions,
     });
 }
+
 
 /* =========================
    DELETE SAVED RECIPE

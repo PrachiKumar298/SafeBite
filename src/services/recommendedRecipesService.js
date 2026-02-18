@@ -132,7 +132,8 @@ export async function excludeSavedRecipes(userId, meals) {
 
   if (error) {
     console.error("Saved recipes error:", error);
-    return meals;
+    return shuffleArray(meals).slice(0, 8);
+
   }
 
   const savedIds = data.map(r => r.recipe_id);
@@ -158,6 +159,12 @@ export async function getRecommendedRecipes({
   return meals;
 }
 
+function shuffleArray(array) {
+  return array
+    .map(value => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);
+}
 
 
 

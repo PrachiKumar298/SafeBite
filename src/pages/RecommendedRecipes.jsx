@@ -50,11 +50,14 @@ export default function RecommendedRecipes() {
   setSaving(meal.idMeal);
 
   const { error } = await saveRecipe(
-    userId,
-    meal.strMeal,
-    meal.strMealThumb,
-    meal.idMeal
-  );
+  userId,
+  meal.strMeal,
+  meal.strMealThumb,
+  meal.idMeal,
+  extractIngredients(meal),
+  meal.strInstructions
+);
+
 
   if (!error) {
     setRecipes(prev =>
