@@ -153,31 +153,39 @@ export default function RecommendedRecipes() {
 
       {/* ================= RECIPE DETAIL ================= */}
       {selectedRecipe && (
-        <div className="mt-8 p-6 bg-white shadow rounded-lg">
-          <h2 className="text-2xl font-bold mb-4">
-            {selectedRecipe.strMeal}
-          </h2>
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    
+    {/* Modal Card */}
+    <div className="bg-white w-full max-w-2xl max-h-[80vh] overflow-y-auto rounded-xl shadow-xl p-6 relative">
+      
+      {/* Close Button */}
+      <button
+        onClick={() => setSelectedRecipe(null)}
+        className="absolute top-3 right-3 text-gray-500 hover:text-black text-lg"
+      >
+        ✕
+      </button>
 
-          <h3 className="font-semibold mb-2">Ingredients</h3>
-          <ul className="list-disc ml-6 mb-4">
-            {extractIngredients(selectedRecipe).map((i, idx) => (
-              <li key={idx}>{i}</li>
-            ))}
-          </ul>
+      <h2 className="text-2xl font-bold mb-4">
+        {selectedRecipe.strMeal}
+      </h2>
 
-          <h3 className="font-semibold mb-2">Instructions</h3>
-          <p className="text-gray-700 whitespace-pre-line">
-            {selectedRecipe.strInstructions}
-          </p>
+      <h3 className="font-semibold mb-2">Ingredients</h3>
+      <ul className="list-disc ml-6 mb-4">
+        {extractIngredients(selectedRecipe).map((i, idx) => (
+          <li key={idx}>{i}</li>
+        ))}
+      </ul>
 
-          <button
-            onClick={() => setSelectedRecipe(null)}
-            className="mt-4 px-4 py-2 bg-gray-200 rounded"
-          >
-            Close
-          </button>
-        </div>
-      )}
+      <h3 className="font-semibold mb-2">Instructions</h3>
+      <p className="text-gray-700 whitespace-pre-line">
+        {selectedRecipe.strInstructions}
+      </p>
+
+    </div>
+  </div>
+)}
+
     </>
   );
 }
