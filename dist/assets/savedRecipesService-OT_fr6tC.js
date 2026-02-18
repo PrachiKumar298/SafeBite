@@ -1,1 +1,0 @@
-import{s}from"./index-DdU1dMS1.js";async function c(e){const{data:a}=await s.from("saved_recipes").select("*").eq("user_id",e).order("created_at",{ascending:!1});return a||[]}async function d(e,a,i,r){await s.from("saved_recipes").insert({user_id:e,title:a,thumbnail:i,recipe_id:r})}async function n(e){await s.from("saved_recipes").delete().eq("id",e)}export{n as d,c as g,d as s};

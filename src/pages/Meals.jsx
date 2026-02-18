@@ -3,7 +3,8 @@ import { useAuth } from "../context/AuthContext";
 import { getAllergies } from "../services/allergyService";
 import { searchMeals } from "../services/mealService";
 import { BookMarked } from "lucide-react";
-import { saveRecipe } from "../services/savedRecipesService";
+import { saveRecipe } from "../services/savedRecipesService.js";
+
 
 // FULL MEALS / RESTAURANT PAGE
 // Drop into src/pages/Meals.jsx
