@@ -1,8 +1,12 @@
+import React, { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
+
 import { getRecommendedRecipes, extractIngredients } 
 from "../services/recommendedRecipesService";
 
 import { saveRecipe } 
-from "../services/savedRecipesService";
+from "../services/savedRecipesService.js  ";
+
 
 
 export default function RecommendedRecipes() {
