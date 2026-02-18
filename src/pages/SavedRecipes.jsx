@@ -56,8 +56,55 @@ export default function SavedRecipes() {
             >
               View
             </button>
+            {selectedRecipe && (
+  <div
+    className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+    onClick={() => setSelectedRecipe(null)}
+  >
+    <div
+      className="bg-white w-full max-w-2xl max-h-[80vh] overflow-y-auto rounded-xl shadow-xl p-6 relative"
+      onClick={(e) => e.stopPropagation()}
+    >
+      {/* Close Button */}
+      <button
+        onClick={() => setSelectedRecipe(null)}
+        className="absolute top-3 right-3 text-gray-500 hover:text-black text-lg"
+      >
+        ✕
+      </button>
+
+      <h2 className="text-2xl font-bold mb-4">
+        {selectedRecipe.title}
+      </h2>
+
+      {/* Ingredients */}
+      {selectedRecipe.ingredients && (
+        <>
+          <h3 className="font-semibold mb-2">Ingredients</h3>
+          <p className="mb-4">
+            {Array.isArray(selectedRecipe.ingredients)
+              ? selectedRecipe.ingredients.join(", ")
+              : selectedRecipe.ingredients}
+          </p>
+        </>
+      )}
+
+      {/* Instructions */}
+      {selectedRecipe.instructions && (
+        <>
+          <h3 className="font-semibold mb-2">Instructions</h3>
+          <p className="whitespace-pre-line">
+            {selectedRecipe.instructions}
+          </p>
+        </>
+      )}
+    </div>
+  </div>
+)}
+
 
           </div>
+
         ))}
       </div>
     </div>
