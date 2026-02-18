@@ -97,30 +97,32 @@ export function filterByDiet(meals, dietType) {
     "tuna",
     "salmon",
     "crab",
-    "meat"
+    "meat",
+    "seafood"
   ];
 
   return meals.filter(meal => {
     const ingredients = extractIngredients(meal);
 
-    const containsNonVeg = ingredients.some(ing =>
-      nonVegKeywords.some(keyword =>
-        ing.includes(keyword)
-      )
+    const containsNonVegIngredient = ingredients.some(ing =>
+      nonVegKeywords.some(keyword => ing.includes(keyword))
     );
 
+    const isSeafoodCategory =
+      meal.strCategory &&
+      meal.strCategory.toLowerCase().includes("seafood");
+
     if (dietType === "veg") {
-      return !containsNonVeg;
+      return !containsNonVegIngredient && !isSeafoodCategory;
     }
 
     if (dietType === "non-veg") {
-      return containsNonVeg;
+      return containsNonVegIngredient || isSeafoodCategory;
     }
 
     return true;
   });
 }
-
 
 /* =======================================================
    6. Category filter (Dessert / Misc / etc.)
