@@ -20,13 +20,22 @@ export default function Meals() {
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState(null);
   const handleSave = async (meal) => {
-  try {
-    await saveRecipe(userId, meal);
+  if (!userId) return;
+
+  const { error } = await saveRecipe(
+    userId,
+    meal.title,       // correct title
+    meal.thumbnail,   // correct image
+    meal.id           // correct id
+  );
+
+  if (error) {
+    alert("Error saving recipe.");
+  } else {
     alert("Recipe saved!");
-  } catch (e) {
-    alert("Already saved or an error occurred.");
   }
 };
+
 
   useEffect(() => {
     if (!userId) return;
