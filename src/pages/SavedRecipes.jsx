@@ -24,6 +24,8 @@ export default function SavedRecipes() {
     await deleteSavedRecipe(id);
     loadSaved();
   };
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
+
 
   if (loading) return <div>Loading saved recipes...</div>;
 
@@ -48,6 +50,13 @@ export default function SavedRecipes() {
             >
               Remove
             </button>
+            <button
+              onClick={() => setSelectedRecipe(r)}
+              className="mt-3 text-blue-600 hover:underline"
+            >
+              View
+            </button>
+
           </div>
         ))}
       </div>
