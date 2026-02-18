@@ -98,7 +98,8 @@ export function filterByDiet(meals, dietType) {
     "salmon",
     "crab",
     "meat",
-    "seafood"
+    "seafood",
+    "duck"
   ];
 
   return meals.filter(meal => {
