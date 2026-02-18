@@ -29,13 +29,23 @@ export async function getAllAllergenKeywords(userId) {
 /* =======================================================
    2. Fetch ALL meals from MealDB
 ======================================================= */
-export async function fetchAllRecipes() {
-  const res = await fetch(
-    "https://www.themealdb.com/api/json/v1/1/search.php?s="
-  );
-  const data = await res.json();
-  return data.meals || [];
+export async function fetchAllRecipes(count = 10) {
+  const recipes = [];
+
+  for (let i = 0; i < count; i++) {
+    const res = await fetch(
+      "https://www.themealdb.com/api/json/v1/1/random.php"
+    );
+    const data = await res.json();
+    if (data.meals && data.meals[0]) {
+      recipes.push(data.meals[0]);
+    }
+  }
+
+  return recipes;
 }
+
+
 
 /* =======================================================
    3. Extract ingredients (lowercased)
@@ -149,7 +159,8 @@ export async function getRecommendedRecipes({
 }) {
   const allergenKeywords = await getAllAllergenKeywords(userId);
 
-  let meals = await fetchAllRecipes();
+  let meals = await fetchAllRecipes(12);
+
 
   meals = filterSafeMeals(meals, allergenKeywords);
   meals = filterByDiet(meals, dietType);

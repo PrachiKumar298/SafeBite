@@ -83,6 +83,20 @@ export default function RecommendedRecipes() {
 
   return (
     <>
+    {/* ================= REFRESH BUTTON ================= */}
+    <div className="flex justify-between items-center mb-4">
+      <h2 className="text-xl font-semibold">
+        Recommended Recipes
+      </h2>
+
+      <button
+        onClick={loadRecipes}
+        className="px-4 py-2 text-white rounded-lg"
+        style={{ background: "var(--sb-accent)" }}
+      >
+        Refresh Recipes
+      </button>
+    </div>
       {/* ================= FILTERS ================= */}
       <div className="flex flex-wrap gap-3 mb-6">
         <select
@@ -192,3 +206,4 @@ export default function RecommendedRecipes() {
     </>
   );
 }
+
