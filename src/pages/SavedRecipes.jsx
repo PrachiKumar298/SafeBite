@@ -43,22 +43,38 @@ export default function SavedRecipes() {
             <img src={r.thumbnail} alt={r.title} className="rounded-lg mb-2" />
 
             <h3 className="font-bold">{r.title}</h3>
+            <div className="flex gap-3 mt-4">
+  <button
+    onClick={() => {
+      console.log("Selected recipe:", r);
+      setSelectedRecipe(r);
+    }}
+    className="flex-1 px-3 py-2 rounded-lg border text-sm font-medium transition"
+    style={{
+      borderColor: "var(--sb-accent)",
+      color: "var(--sb-accent)",
+      background: "transparent",
+    }}
+    onMouseEnter={(e) => (e.target.style.background = "rgba(0,0,0,0.03)")}
+    onMouseLeave={(e) => (e.target.style.background = "transparent")}
+  >
+    View
+  </button>
 
-            <button
-              onClick={() => handleDelete(r.id)}
-              className="mt-2 text-red-600 hover:underline"
-            >
-              Remove
-            </button>
-            <button
-  onClick={() => {
-    console.log("Selected recipe:", r);
-    setSelectedRecipe(r);
-  }}
-  className="mt-3 text-blue-600 hover:underline"
->
-  View
-</button>
+  <button
+    onClick={() => handleDelete(r.id)}
+    className="flex-1 px-3 py-2 rounded-lg text-white text-sm font-medium transition"
+    style={{
+      background: "var(--sb-accent)",
+      opacity: 1,
+    }}
+    onMouseEnter={(e) => (e.target.style.opacity = "0.85")}
+    onMouseLeave={(e) => (e.target.style.opacity = "1")}
+  >
+    Remove
+  </button>
+</div>
+
 
             {selectedRecipe && (
   <div
