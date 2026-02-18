@@ -65,12 +65,13 @@ export default function Allergies() {
       {/* Add Box */}
       <div className="flex gap-3 mb-6">
         <input
-            type="text"
-            className="flex-1 p-3 border rounded-lg"
-            placeholder="e.g., peanut, lactose, gluten"
-            value={newAllergy}
-            onChange={(e) => setNewAllergy(e.target.value)}
+          type="text"
+          className="flex-1 p-3 border border-gray-300 rounded-xl bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-green-700"
+          placeholder="e.g., peanut, lactose, gluten"
+          value={newAllergy}
+          onChange={(e) => setNewAllergy(e.target.value)}
         />
+
 
         <button
           onClick={handleAdd}
