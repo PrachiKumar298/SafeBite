@@ -51,11 +51,15 @@ export default function SavedRecipes() {
               Remove
             </button>
             <button
-              onClick={() => setSelectedRecipe(r)}
-              className="mt-3 text-blue-600 hover:underline"
-            >
-              View
-            </button>
+  onClick={() => {
+    console.log("Selected recipe:", r);
+    setSelectedRecipe(r);
+  }}
+  className="mt-3 text-blue-600 hover:underline"
+>
+  View
+</button>
+
             {selectedRecipe && (
   <div
     className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"

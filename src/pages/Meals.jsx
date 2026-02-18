@@ -23,11 +23,14 @@ export default function Meals() {
   if (!userId) return;
 
   const { error } = await saveRecipe(
-    userId,
-    meal.title,       // correct title
-    meal.thumbnail,   // correct image
-    meal.id           // correct id
-  );
+  userId,
+  meal.title,
+  meal.thumbnail,
+  meal.id,
+  meal.ingredients,
+  meal.instructions
+);
+
 
   if (error) {
     alert("Error saving recipe.");
