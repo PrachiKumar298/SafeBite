@@ -1,27 +1,28 @@
 import { supabase } from "../supabase";
 
-export async function getSavedRecipes(userId) {
-  const { data } = await supabase
-    .from("saved_recipes")
-    .select("*")
-    .eq("user_id", userId)
-    .order("created_at", { ascending: false });
-
-  return data || [];
-}
-
 export async function saveRecipe(userId, title, thumbnail, recipeId) {
-  await supabase.from("saved_recipes").insert({
-    user_id: userId,
-    title,
-    thumbnail,
-    recipe_id: recipeId,
-  });
-}
+  if (!userId) {
+    console.error("❌ No userId provided");
+    return { error: "Missing userId" };
+  }
 
-export async function deleteSavedRecipe(id) {
-  await supabase.from("saved_recipes").delete().eq("id", id);
-}
+  const { data, error } = await supabase
+    .from("saved_recipes")
+    .insert({
+      user_id: userId,
+      title,
+      thumbnail,
+      recipe_id: recipeId,
+    })
+    .select();
 
+  if (error) {
+    console.error("❌ Save failed:", error);
+  } else {
+    console.log("✅ Saved recipe:", data);
+  }
+
+  return { data, error };
+}
 
 

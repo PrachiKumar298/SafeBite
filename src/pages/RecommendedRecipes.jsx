@@ -42,17 +42,26 @@ export default function RecommendedRecipes() {
      SAVE RECIPE
   --------------------------------------------- */
   const handleSave = async (meal) => {
-    setSaving(meal.idMeal);
+  if (!userId) return;
 
-    await SavedRecipies(userId, meal);
+  setSaving(meal.idMeal);
 
-    // Remove from UI instantly
+  const { error } = await saveRecipe(
+    userId,
+    meal.strMeal,
+    meal.strMealThumb,
+    meal.idMeal
+  );
+
+  if (!error) {
     setRecipes(prev =>
       prev.filter(r => r.idMeal !== meal.idMeal)
     );
+  }
 
-    setSaving("");
-  };
+  setSaving("");
+};
+
 
   /* ---------------------------------------------
      UI STATES

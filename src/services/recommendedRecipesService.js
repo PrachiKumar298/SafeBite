@@ -70,24 +70,47 @@ export function filterSafeMeals(meals, allergenKeywords) {
 export function filterByDiet(meals, dietType) {
   if (dietType === "all") return meals;
 
-  const nonVegCategories = [
-    "Beef",
-    "Chicken",
-    "Lamb",
-    "Pork",
-    "Seafood"
+  const nonVegKeywords = [
+    "chicken",
+    "beef",
+    "pork",
+    "lamb",
+    "mutton",
+    "fish",
+    "shrimp",
+    "prawn",
+    "egg",
+    "bacon",
+    "ham",
+    "gelatin",
+    "anchovy",
+    "tuna",
+    "salmon",
+    "crab",
+    "meat"
   ];
 
   return meals.filter(meal => {
+    const ingredients = extractIngredients(meal);
+
+    const containsNonVeg = ingredients.some(ing =>
+      nonVegKeywords.some(keyword =>
+        ing.includes(keyword)
+      )
+    );
+
     if (dietType === "veg") {
-      return !nonVegCategories.includes(meal.strCategory);
+      return !containsNonVeg;
     }
+
     if (dietType === "non-veg") {
-      return nonVegCategories.includes(meal.strCategory);
+      return containsNonVeg;
     }
+
     return true;
   });
 }
+
 
 /* =======================================================
    6. Category filter (Dessert / Misc / etc.)
@@ -97,13 +120,14 @@ export function filterByCategory(meals, category) {
   return meals.filter(meal => meal.strCategory === category);
 }
 
+
 /* =======================================================
    7. Exclude already-saved recipes
 ======================================================= */
 export async function excludeSavedRecipes(userId, meals) {
   const { data, error } = await supabase
     .from("saved_recipes")
-    .select("external_id")
+    .select("recipe_id")   // matches your DB
     .eq("user_id", userId);
 
   if (error) {
@@ -111,13 +135,12 @@ export async function excludeSavedRecipes(userId, meals) {
     return meals;
   }
 
-  const savedIds = data.map(r => r.external_id);
+  const savedIds = data.map(r => r.recipe_id);
+
   return meals.filter(meal => !savedIds.includes(meal.idMeal));
 }
 
-/* =======================================================
-   8. MAIN RECOMMENDATION PIPELINE (USE THIS)
-======================================================= */
+
 export async function getRecommendedRecipes({
   userId,
   dietType = "all",
@@ -135,19 +158,6 @@ export async function getRecommendedRecipes({
   return meals;
 }
 
-/* =======================================================
-   9. Save recipe
-======================================================= */
-export async function saveRecommendedRecipe(userId, meal) {
-  const { error } = await supabase.from("saved_recipes").insert([
-    {
-      user_id: userId,
-      recipe_name: meal.strMeal,
-      recipe_thumb: meal.strMealThumb,
-      external_id: meal.idMeal,
-      category: meal.strCategory
-    }
-  ]);
 
-  return { error };
-}
+
+
