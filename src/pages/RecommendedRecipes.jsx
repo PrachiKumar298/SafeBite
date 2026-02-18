@@ -74,13 +74,6 @@ export default function RecommendedRecipes() {
   --------------------------------------------- */
   if (loading) return <p className="text-gray-500">Loading recipes…</p>;
 
-  if (recipes.length === 0)
-    return (
-      <p className="text-gray-500">
-        No safe recipes found based on your filters.
-      </p>
-    );
-
   return (
     <>
     {/* ================= REFRESH BUTTON ================= */}
@@ -124,49 +117,66 @@ export default function RecommendedRecipes() {
       </div>
 
       {/* ================= RECIPE GRID ================= */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {recipes.map(meal => (
-          <div
-            key={meal.idMeal}
-            className="p-4 bg-white shadow rounded-lg"
+<div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+  {recipes.length === 0 ? (
+    <div className="col-span-full text-center text-gray-500 py-10">
+      <p className="text-lg font-medium">
+        No safe recipes found for this filter.
+      </p>
+
+      <button
+        onClick={loadRecipes}
+        className="mt-4 px-4 py-2 text-white rounded-lg"
+        style={{ background: "var(--sb-accent)" }}
+      >
+        Try Refreshing
+      </button>
+    </div>
+  ) : (
+    recipes.map(meal => (
+      <div
+        key={meal.idMeal}
+        className="p-4 bg-white shadow rounded-lg"
+      >
+        <img
+          src={meal.strMealThumb}
+          alt={meal.strMeal}
+          className="rounded-lg mb-3"
+        />
+
+        <h3 className="font-bold text-lg">
+          {meal.strMeal}
+        </h3>
+
+        <p className="text-sm text-gray-600">
+          Category: {meal.strCategory}
+        </p>
+
+        <div className="flex gap-3 mt-3">
+          <button
+            onClick={() => handleSave(meal)}
+            disabled={saving === meal.idMeal}
+            className="text-white px-3 py-2 rounded"
+            style={{
+              background: "var(--sb-accent)",
+              opacity: saving === meal.idMeal ? 0.6 : 1
+            }}
           >
-            <img
-              src={meal.strMealThumb}
-              alt={meal.strMeal}
-              className="rounded-lg mb-3"
-            />
+            {saving === meal.idMeal ? "Saving…" : "Save"}
+          </button>
 
-            <h3 className="font-bold text-lg">
-              {meal.strMeal}
-            </h3>
-
-            <p className="text-sm text-gray-600">
-              Category: {meal.strCategory}
-            </p>
-
-            <div className="flex gap-3 mt-3">
-              <button
-                onClick={() => handleSave(meal)}
-                disabled={saving === meal.idMeal}
-                className="text-white px-3 py-2 rounded"
-                style={{
-                  background: "var(--sb-accent)",
-                  opacity: saving === meal.idMeal ? 0.6 : 1
-                }}
-              >
-                {saving === meal.idMeal ? "Saving…" : "Save"}
-              </button>
-
-              <button
-                onClick={() => setSelectedRecipe(meal)}
-                className="px-3 py-2 border rounded"
-              >
-                View
-              </button>
-            </div>
-          </div>
-        ))}
+          <button
+            onClick={() => setSelectedRecipe(meal)}
+            className="px-3 py-2 border rounded hover:bg-gray-50"
+          >
+            View
+          </button>
+        </div>
       </div>
+    ))
+  )}
+</div>
+
 
       {/* ================= RECIPE DETAIL ================= */}
       {selectedRecipe && (
