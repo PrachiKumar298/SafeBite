@@ -1,5 +1,5 @@
 // src/layouts/DashboardLayout.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   Home,
@@ -9,7 +9,9 @@ import {
   Settings,
   AlertTriangle,
   ChefHat,
-  Menu
+  Menu,
+  X,
+  LogOut
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
@@ -18,18 +20,31 @@ export default function DashboardLayout({ children }) {
   const { user, logout } = useAuth();
   const { theme } = useTheme();
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false); // kept for compatibility
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Track viewport size
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  // Close mobile sidebar when switching to desktop
+  useEffect(() => {
+    if (!isMobile) setMobileOpen(false);
+  }, [isMobile]);
 
   const menuItems = [
-    { to: "/", icon: <Home size={18} />, label: "Dashboard" },
-    { to: "/food-check", icon: <Utensils size={18} />, label: "Food Safety" },
-    { to: "/medicine-check", icon: <Pill size={18} />, label: "Medicine" },
-    { to: "/meals", icon: <ChefHat size={18} />, label: "Meals" },
-    // ❌ REMOVED PACKAGED FOOD
-    { to: "/allergies", icon: <AlertTriangle size={18} />, label: "Allergies" },
-    { to: "/recipes", icon: <Book size={18} />, label: "Recipes" },
-    { to: "/settings", icon: <Settings size={18} />, label: "Settings" },
+    { to: "/", icon: Home, label: "Dashboard" },
+    { to: "/food-check", icon: Utensils, label: "Food Safety" },
+    { to: "/medicine-check", icon: Pill, label: "Medicine" },
+    { to: "/meals", icon: ChefHat, label: "Meals" },
+    { to: "/allergies", icon: AlertTriangle, label: "Allergies" },
+    { to: "/recipes", icon: Book, label: "Recipes" },
+    { to: "/settings", icon: Settings, label: "Settings" },
   ];
 
   const handleLogout = async () => {
@@ -37,125 +52,242 @@ export default function DashboardLayout({ children }) {
     navigate("/auth");
   };
 
-  const sidebarBg = "bg-[color:var(--sb-card)]";
-  const accent = "text-[color:var(--sb-accent)]";
+  const isDark = theme === "dark";
+  const sidebarWidth = collapsed ? "4.5rem" : "15rem";
+
+  // Shared nav item renderer
+  const NavItem = ({ item, onClick }) => {
+    const Icon = item.icon;
+    return (
+      <NavLink
+        key={item.to}
+        to={item.to}
+        onClick={onClick}
+        end={item.to === "/"}
+        className={({ isActive }) =>
+          `group relative flex items-center rounded-xl font-medium transition-all duration-200 ${
+            collapsed && !isMobile
+              ? "justify-center px-0 py-4"
+              : "gap-3 px-4 py-3"
+          } ${
+            isActive
+              ? "bg-[color:var(--sb-accent)] text-white shadow-md"
+              : "hover:bg-[color:var(--sb-accent)]/10 text-[color:var(--sb-text)]"
+          }`
+        }
+      >
+        {({ isActive }) => (
+          <>
+            <Icon
+              size={collapsed && !isMobile ? 22 : 18}
+              className={`flex-shrink-0 transition-all duration-200 ${
+                isActive ? "text-white" : "text-[color:var(--sb-accent)]"
+              }`}
+            />
+            {(!collapsed || isMobile) && (
+              <span className="truncate">{item.label}</span>
+            )}
+            {/* Tooltip for collapsed state */}
+            {collapsed && !isMobile && (
+              <span
+                className="absolute left-full ml-3 px-2.5 py-1 rounded-lg text-sm font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 z-50 shadow-lg"
+                style={{
+                  background: "var(--sb-accent)",
+                  color: "#fff",
+                }}
+              >
+                {item.label}
+              </span>
+            )}
+          </>
+        )}
+      </NavLink>
+    );
+  };
 
   return (
-    <div className={`flex min-h-screen ${theme === "dark" ? "text-white" : ""}`}>
+    <div className={`flex min-h-screen ${isDark ? "text-white" : ""}`} style={{ background: "var(--sb-bg)" }}>
 
-      {/* Sidebar (collapsible for all sizes) */}
+      {/* ─── Desktop Sidebar ─────────────────────────────────────── */}
       <aside
-        className={`flex flex-col h-screen p-6 ${sidebarBg} shadow-xl fixed left-0 top-0 bottom-0 transition-width`}
-        style={{ width: collapsed ? "5rem" : "16rem" }}
+        className="hidden md:flex flex-col h-screen fixed left-0 top-0 bottom-0 z-30 shadow-xl overflow-hidden"
+        style={{
+          width: sidebarWidth,
+          background: "var(--sb-card)",
+          borderRight: "1px solid var(--sb-border)",
+          transition: "width 0.25s cubic-bezier(0.4,0,0.2,1)",
+        }}
       >
-        <div className="flex items-center justify-between mb-6">
-          <h1 className={`text-2xl font-bold ${accent} ${collapsed ? 'truncate' : ''}`}>
-            {!collapsed ? 'SafeBite' : 'SB'}
-          </h1>
+        {/* Header */}
+        <div
+          className="flex items-center h-16 px-4 flex-shrink-0"
+          style={{
+            borderBottom: "1px solid var(--sb-border)",
+            justifyContent: collapsed ? "center" : "space-between",
+          }}
+        >
+          {!collapsed && (
+            <span
+              className="text-xl font-bold tracking-tight"
+              style={{ color: "var(--sb-accent)" }}
+            >
+              SafeBite
+            </span>
+          )}
           <button
             onClick={() => setCollapsed((s) => !s)}
-            className="p-1 rounded-md bg-[color:var(--sb-card)] shadow-sm"
+            className="flex items-center justify-center w-8 h-8 rounded-lg transition-colors hover:bg-[color:var(--sb-accent)]/10"
             aria-label="Toggle sidebar"
+            style={{ color: "var(--sb-accent)" }}
           >
-            <Menu size={18} />
+            <Menu size={20} />
           </button>
         </div>
 
-        <nav className="flex flex-col gap-2">
+        {/* Nav */}
+        <nav
+          className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden py-4"
+          style={{ gap: collapsed ? "0.25rem" : "0.25rem", padding: collapsed ? "1rem 0.5rem" : "1rem 0.75rem" }}
+        >
           {menuItems.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              className={({ isActive }) =>
-                `flex items-center ${collapsed ? 'justify-center' : 'gap-3'} p-3 rounded-xl font-medium hover:bg-opacity-5 transition ${
-                  isActive ? "bg-[color:var(--sb-accent)]/10" : ""
-                }`
-              }
-            >
-              {item.icon}
-              <span className={`${collapsed ? 'hidden' : ''}`}>{item.label}</span>
-            </NavLink>
+            <NavItem key={item.to} item={item} />
           ))}
         </nav>
 
-        <div className="mt-auto pt-6 border-t" style={{ borderColor: 'var(--sb-border)' }}>
-          <div className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'}`}>
-            <div className="w-10 h-10 rounded-full bg-[color:var(--sb-accent)] flex items-center justify-center text-white font-semibold">
+        {/* Footer */}
+        <div
+          className="flex-shrink-0 py-4"
+          style={{
+            borderTop: "1px solid var(--sb-border)",
+            padding: collapsed ? "1rem 0.5rem" : "1rem 0.75rem",
+          }}
+        >
+          <div className={`flex items-center ${collapsed ? "justify-center" : "gap-3"} mb-3`}>
+            <div
+              className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
+              style={{ background: "var(--sb-accent)" }}
+            >
               {user?.email?.[0]?.toUpperCase()}
             </div>
             {!collapsed && (
-              <div>
-                <p className="font-semibold">{user?.email}</p>
-              </div>
+              <p className="text-sm font-medium truncate" style={{ color: "var(--sb-muted)" }}>
+                {user?.email}
+              </p>
             )}
           </div>
-
-          {!collapsed && (
-            <button
-              onClick={handleLogout}
-              className="mt-4 w-full text-white py-2 rounded-lg"
-              style={{ background: 'var(--sb-accent)' }}
-            >
-              Logout
-            </button>
-          )}
+          <button
+            onClick={handleLogout}
+            className={`flex items-center justify-center gap-2 w-full py-2 rounded-xl text-sm font-medium text-white transition-opacity hover:opacity-80`}
+            style={{ background: "var(--sb-accent)" }}
+            title="Logout"
+          >
+            <LogOut size={16} />
+            {!collapsed && <span>Logout</span>}
+          </button>
         </div>
       </aside>
 
-      {/* Mobile Toggle */}
-      <button
-        onClick={() => setOpen(true)}
-        className="md:hidden fixed top-4 left-4 p-2 bg-[color:var(--sb-card)] rounded-lg shadow"
+      {/* ─── Mobile Header Bar ───────────────────────────────────── */}
+      <header
+        className="md:hidden fixed top-0 left-0 right-0 h-14 flex items-center px-4 z-30 shadow-sm"
+        style={{ background: "var(--sb-card)", borderBottom: "1px solid var(--sb-border)" }}
       >
-        <Menu size={24} />
-      </button>
+        <button
+          onClick={() => setMobileOpen(true)}
+          className="flex items-center justify-center w-9 h-9 rounded-lg"
+          style={{ color: "var(--sb-accent)" }}
+          aria-label="Open menu"
+        >
+          <Menu size={22} />
+        </button>
+        <span
+          className="ml-3 text-lg font-bold"
+          style={{ color: "var(--sb-accent)" }}
+        >
+          SafeBite
+        </span>
+      </header>
 
-      {/* Mobile Overlay */}
-      {open && (
-        <div
-          className="fixed inset-0 bg-black/40 z-40"
-          onClick={() => setOpen(false)}
-        />
-      )}
+      {/* ─── Mobile Overlay ──────────────────────────────────────── */}
+      <div
+        className="md:hidden fixed inset-0 bg-black/50 z-40 transition-opacity duration-200"
+        style={{
+          opacity: mobileOpen ? 1 : 0,
+          pointerEvents: mobileOpen ? "auto" : "none",
+        }}
+        onClick={() => setMobileOpen(false)}
+      />
 
-      {/* Mobile Sidebar */}
+      {/* ─── Mobile Sidebar ──────────────────────────────────────── */}
       <aside
-        className={`fixed top-0 left-0 h-full w-64 p-6 z-50 transform transition-transform md:hidden ${
-          open ? "translate-x-0" : "-translate-x-full"
-        } ${sidebarBg}`}
+        className="md:hidden fixed top-0 left-0 h-full w-72 z-50 flex flex-col shadow-2xl"
+        style={{
+          background: "var(--sb-card)",
+          transform: mobileOpen ? "translateX(0)" : "translateX(-100%)",
+          transition: "transform 0.25s cubic-bezier(0.4,0,0.2,1)",
+        }}
       >
-        <h1 className={`text-3xl font-bold mb-6 ${accent}`}>SafeBite</h1>
+        {/* Mobile Header */}
+        <div
+          className="flex items-center justify-between h-14 px-5 flex-shrink-0"
+          style={{ borderBottom: "1px solid var(--sb-border)" }}
+        >
+          <span className="text-xl font-bold" style={{ color: "var(--sb-accent)" }}>
+            SafeBite
+          </span>
+          <button
+            onClick={() => setMobileOpen(false)}
+            className="flex items-center justify-center w-8 h-8 rounded-lg"
+            style={{ color: "var(--sb-muted)" }}
+            aria-label="Close menu"
+          >
+            <X size={20} />
+          </button>
+        </div>
 
-        <nav className="flex flex-col gap-3">
+        {/* Mobile Nav */}
+        <nav className="flex flex-col flex-1 overflow-y-auto p-3 gap-1">
           {menuItems.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              onClick={() => setOpen(false)}
-              className={({ isActive }) =>
-                `flex items-center gap-3 p-3 rounded-xl font-medium hover:bg-opacity-5 transition ${
-                  isActive ? "bg-[color:var(--sb-accent)]/10" : ""
-                }`
-              }
-            >
-              {item.icon}
-              <span>{item.label}</span>
-            </NavLink>
+            <NavItem key={item.to} item={item} onClick={() => setMobileOpen(false)} />
           ))}
         </nav>
 
-        <button
-          onClick={handleLogout}
-          className="mt-6 w-full text-white py-2 rounded-lg"
-          style={{ background: "var(--sb-accent)" }}
-        >
-          Logout
-        </button>
+        {/* Mobile Footer */}
+        <div className="flex-shrink-0 p-4" style={{ borderTop: "1px solid var(--sb-border)" }}>
+          <div className="flex items-center gap-3 mb-3">
+            <div
+              className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm"
+              style={{ background: "var(--sb-accent)" }}
+            >
+              {user?.email?.[0]?.toUpperCase()}
+            </div>
+            <p className="text-sm font-medium truncate" style={{ color: "var(--sb-muted)" }}>
+              {user?.email}
+            </p>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="flex items-center justify-center gap-2 w-full py-2 rounded-xl text-sm font-medium text-white"
+            style={{ background: "var(--sb-accent)" }}
+          >
+            <LogOut size={16} />
+            <span>Logout</span>
+          </button>
+        </div>
       </aside>
 
-      {/* Main Content (account for sidebar width) */}
-      <main className="flex-1 p-6" style={{ marginLeft: collapsed ? '5rem' : '16rem' }}>
-        {children}
+      {/* ─── Main Content ────────────────────────────────────────── */}
+      <main
+        className="flex-1 min-h-screen"
+        style={{
+          marginLeft: isMobile ? 0 : sidebarWidth,
+          paddingTop: isMobile ? "3.5rem" : 0,
+          transition: "margin-left 0.25s cubic-bezier(0.4,0,0.2,1)",
+        }}
+      >
+        <div className="p-4 md:p-6">
+          {children}
+        </div>
       </main>
     </div>
   );
