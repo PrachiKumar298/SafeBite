@@ -5,6 +5,7 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 // Lazy-load page components to reduce initial bundle size
+const LandingPage = lazy(() => import("./pages/LandingPage"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const FoodSafety = lazy(() => import("./pages/FoodSafety"));
 const MedicineChecker = lazy(() => import("./pages/MedicineChecker"));
@@ -20,6 +21,7 @@ export default function App() {
       <Routes>
 
       {/* Public */}
+      <Route path="/landing" element={<LandingPage />} />
       <Route path="/auth" element={<CombinedAuth />} />
 
       {/* Protected Routes */}
