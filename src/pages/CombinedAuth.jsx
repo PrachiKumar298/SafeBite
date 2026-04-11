@@ -6,24 +6,24 @@ import { Check, X, Eye, EyeOff, ArrowLeft } from "lucide-react";
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function hasSequential(pwd) {
-  // Detects 3+ sequential characters (ascending or descending): abc, 123, cba, 321
+  // Detects 3+ sequential chars (ascending or descending): abc, 123, cba, 321
   for (let i = 0; i < pwd.length - 2; i++) {
     const a = pwd.charCodeAt(i);
     const b = pwd.charCodeAt(i + 1);
     const c = pwd.charCodeAt(i + 2);
-    if (b === a + 1 && c === b + 1) return true; // ascending
-    if (b === a - 1 && c === b - 1) return true; // descending
+    if (b === a + 1 && c === b + 1) return true;
+    if (b === a - 1 && c === b - 1) return true;
   }
   return false;
 }
 
 const RULES = [
-  { id: "len",   label: "At least 8 characters",          test: (p) => p.length >= 8 },
-  { id: "upper", label: "At least 1 uppercase letter",    test: (p) => /[A-Z]/.test(p) },
-  { id: "lower", label: "At least 1 lowercase letter",    test: (p) => /[a-z]/.test(p) },
-  { id: "num",   label: "At least 1 number",              test: (p) => /[0-9]/.test(p) },
-  { id: "spec",  label: "At least 1 special character",   test: (p) => /[!@#$%^&*()_\-+=<>?{}[\]~`|\\:;"',./]/.test(p) },
-  { id: "seq",   label: "No sequential characters (abc, 123…)", test: (p) => p.length > 0 && !hasSequential(p) },
+  { id: "len",   label: "At least 8 characters",               test: (p) => p.length >= 8 },
+  { id: "upper", label: "At least 1 uppercase letter",         test: (p) => /[A-Z]/.test(p) },
+  { id: "lower", label: "At least 1 lowercase letter",         test: (p) => /[a-z]/.test(p) },
+  { id: "num",   label: "At least 1 number",                   test: (p) => /[0-9]/.test(p) },
+  { id: "spec",  label: "At least 1 special character",        test: (p) => /[!@#$%^&*()\-_+=<>?{}[\]~`|\\:;"',./]/.test(p) },
+  { id: "seq",   label: "No sequential characters (abc, 123…)",test: (p) => p.length > 0 && !hasSequential(p) },
 ];
 
 function getFirstFailingRule(pwd) {
@@ -33,7 +33,7 @@ function getFirstFailingRule(pwd) {
   return null;
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
+// ─── Component ─────────────────────────────────────────────────────────────
 
 export default function CombinedAuth() {
   const { user, loading, loginWithEmail, signUpWithEmail } = useAuth();
@@ -56,7 +56,15 @@ export default function CombinedAuth() {
 
   const reset = () => { setMsg(""); setErr(""); };
 
-  // ─── Login ─────────────────────────────────────────────────────────────────
+  const switchMode = (next) => {
+    setMode(next);
+    reset();
+    setPassword("");
+    setConfirmPassword("");
+    setPwdFocused(false);
+  };
+
+  // ─── Login ────────────────────────────────────────────────────────────────
   const handleLogin = async (e) => {
     e.preventDefault();
     reset();
@@ -67,7 +75,7 @@ export default function CombinedAuth() {
     setBusy(false);
   };
 
-  // ─── Signup ────────────────────────────────────────────────────────────────
+  // ─── Signup ───────────────────────────────────────────────────────────────
   const handleSignup = async (e) => {
     e.preventDefault();
     reset();
@@ -89,9 +97,11 @@ export default function CombinedAuth() {
   };
 
   const allRulesPassed = RULES.every((r) => r.test(password));
+  const pwdsMatch = confirmPassword === password && confirmPassword.length > 0;
+  const submitDisabled = busy || (mode === "signup" && (!allRulesPassed || !pwdsMatch));
 
-  // ─── Shared input style ────────────────────────────────────────────────────
-  const inputStyle = {
+  // ─── Shared input base style ───────────────────────────────────────────────
+  const inputBase = {
     width: "100%",
     padding: "0.75rem 1rem",
     borderRadius: "0.625rem",
@@ -116,7 +126,7 @@ export default function CombinedAuth() {
         fontFamily: "'Inter', sans-serif",
       }}
     >
-      {/* Back to landing */}
+      {/* ← Back to landing */}
       <button
         onClick={() => navigate("/landing")}
         style={{
@@ -159,7 +169,7 @@ export default function CombinedAuth() {
           </p>
         </div>
 
-        {/* Feedback messages */}
+        {/* Feedback */}
         {err && (
           <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: "0.5rem", padding: "0.6rem 0.875rem", marginBottom: "1rem", color: "#dc2626", fontSize: "0.85rem", display: "flex", alignItems: "center", gap: "0.4rem" }}>
             <X size={14} /> {err}
@@ -172,48 +182,55 @@ export default function CombinedAuth() {
         )}
 
         {/* Form */}
-        <form onSubmit={mode === "login" ? handleLogin : handleSignup} style={{ display: "flex", flexDirection: "column", gap: "0.875rem" }}>
-
+        <form
+          onSubmit={mode === "login" ? handleLogin : handleSignup}
+          style={{ display: "flex", flexDirection: "column", gap: "0.875rem" }}
+        >
           {/* Email */}
           <div>
-            <label style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--sb-muted)", display: "block", marginBottom: "0.3rem" }}>Email</label>
+            <label style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--sb-muted)", display: "block", marginBottom: "0.3rem" }}>
+              Email
+            </label>
             <input
               type="email"
               placeholder="you@example.com"
-              style={inputStyle}
+              style={inputBase}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              onFocus={(e) => e.target.style.borderColor = "var(--sb-accent)"}
-              onBlur={(e) => e.target.style.borderColor = "var(--sb-border)"}
+              onFocus={(e) => (e.target.style.borderColor = "var(--sb-accent)")}
+              onBlur={(e) => (e.target.style.borderColor = "var(--sb-border)")}
               required
             />
           </div>
 
           {/* Password */}
           <div>
-            <label style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--sb-muted)", display: "block", marginBottom: "0.3rem" }}>Password</label>
+            <label style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--sb-muted)", display: "block", marginBottom: "0.3rem" }}>
+              Password
+            </label>
             <div style={{ position: "relative" }}>
               <input
                 type={showPwd ? "text" : "password"}
                 placeholder="Enter password"
-                style={{ ...inputStyle, paddingRight: "2.75rem" }}
+                style={{ ...inputBase, paddingRight: "2.75rem" }}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 onFocus={(e) => { e.target.style.borderColor = "var(--sb-accent)"; setPwdFocused(true); }}
-                onBlur={(e) => { e.target.style.borderColor = "var(--sb-border)"; }}
+                onBlur={(e) => (e.target.style.borderColor = "var(--sb-border)")}
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPwd((s) => !s)}
                 style={{ position: "absolute", right: "0.75rem", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "var(--sb-muted)", padding: 0, display: "flex" }}
+                tabIndex={-1}
               >
                 {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
           </div>
 
-          {/* Live password requirements (signup only) */}
+          {/* Live requirements checklist — signup only */}
           {mode === "signup" && (pwdFocused || password.length > 0) && (
             <div
               style={{
@@ -223,7 +240,7 @@ export default function CombinedAuth() {
                 padding: "0.75rem 1rem",
               }}
             >
-              <p style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--sb-muted)", marginBottom: "0.5rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+              <p style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--sb-muted)", marginBottom: "0.5rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                 Password requirements
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.375rem" }}>
@@ -231,16 +248,18 @@ export default function CombinedAuth() {
                   const passed = rule.test(password);
                   return (
                     <div key={rule.id} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                      <div style={{
-                        width: 16, height: 16, borderRadius: "50%", flexShrink: 0,
-                        background: passed ? "#41644A" : "transparent",
-                        border: `1.5px solid ${passed ? "#41644A" : "var(--sb-border)"}`,
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        transition: "all 0.2s",
-                      }}>
+                      <div
+                        style={{
+                          width: 16, height: 16, borderRadius: "50%", flexShrink: 0,
+                          background: passed ? "#41644A" : "transparent",
+                          border: `1.5px solid ${passed ? "#41644A" : "var(--sb-border)"}`,
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          transition: "all 0.2s",
+                        }}
+                      >
                         {passed && <Check size={10} color="#fff" strokeWidth={3} />}
                       </div>
-                      <span style={{ fontSize: "0.8rem", color: passed ? "#41644A" : "var(--sb-muted)", transition: "color 0.2s", fontWeight: passed ? 600 : 400 }}>
+                      <span style={{ fontSize: "0.8rem", color: passed ? "#41644A" : "var(--sb-muted)", fontWeight: passed ? 600 : 400, transition: "color 0.2s" }}>
                         {rule.label}
                       </span>
                     </div>
@@ -250,29 +269,44 @@ export default function CombinedAuth() {
             </div>
           )}
 
-          {/* Confirm Password (signup only) */}
+          {/* Confirm password — signup only */}
           {mode === "signup" && (
             <div>
-              <label style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--sb-muted)", display: "block", marginBottom: "0.3rem" }}>Confirm Password</label>
+              <label style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--sb-muted)", display: "block", marginBottom: "0.3rem" }}>
+                Confirm Password
+              </label>
               <div style={{ position: "relative" }}>
                 <input
                   type={showConfirm ? "text" : "password"}
                   placeholder="Re-enter password"
                   style={{
-                    ...inputStyle,
+                    ...inputBase,
                     paddingRight: "2.75rem",
-                    borderColor: confirmPassword && confirmPassword !== password ? "#ef4444" : confirmPassword && confirmPassword === password ? "#41644A" : "var(--sb-border)",
+                    borderColor:
+                      confirmPassword && confirmPassword !== password
+                        ? "#ef4444"
+                        : confirmPassword && confirmPassword === password
+                        ? "#41644A"
+                        : "var(--sb-border)",
                   }}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  onFocus={(e) => e.target.style.borderColor = "var(--sb-accent)"}
-                  onBlur={(e) => e.target.style.borderColor = confirmPassword && confirmPassword !== password ? "#ef4444" : confirmPassword && confirmPassword === password ? "#41644A" : "var(--sb-border)"}
+                  onFocus={(e) => (e.target.style.borderColor = "var(--sb-accent)")}
+                  onBlur={(e) =>
+                    (e.target.style.borderColor =
+                      confirmPassword && confirmPassword !== password
+                        ? "#ef4444"
+                        : confirmPassword && confirmPassword === password
+                        ? "#41644A"
+                        : "var(--sb-border)")
+                  }
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirm((s) => !s)}
                   style={{ position: "absolute", right: "0.75rem", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "var(--sb-muted)", padding: 0, display: "flex" }}
+                  tabIndex={-1}
                 >
                   {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -289,7 +323,7 @@ export default function CombinedAuth() {
           {/* Submit */}
           <button
             type="submit"
-            disabled={busy || (mode === "signup" && (!allRulesPassed || confirmPassword !== password))}
+            disabled={submitDisabled}
             style={{
               width: "100%",
               padding: "0.85rem",
@@ -299,8 +333,8 @@ export default function CombinedAuth() {
               border: "none",
               fontSize: "1rem",
               fontWeight: 700,
-              cursor: busy || (mode === "signup" && (!allRulesPassed || confirmPassword !== password)) ? "not-allowed" : "pointer",
-              opacity: busy || (mode === "signup" && (!allRulesPassed || confirmPassword !== password)) ? 0.6 : 1,
+              cursor: submitDisabled ? "not-allowed" : "pointer",
+              opacity: submitDisabled ? 0.55 : 1,
               transition: "opacity 0.2s",
               marginTop: "0.25rem",
             }}
@@ -312,216 +346,17 @@ export default function CombinedAuth() {
         {/* Mode toggle */}
         <p style={{ textAlign: "center", fontSize: "0.875rem", color: "var(--sb-muted)", marginTop: "1.25rem" }}>
           {mode === "login" ? (
-            <>Don't have an account?{" "}
-              <span onClick={() => { setMode("signup"); reset(); setPassword(""); setConfirmPassword(""); }}
-                style={{ color: "var(--sb-accent)", fontWeight: 600, cursor: "pointer" }}>
-                Sign up
-              </span>
-            </>
-          ) : (
-            <>Already have an account?{" "}
-              <span onClick={() => { setMode("login"); reset(); setPassword(""); setConfirmPassword(""); }}
-                style={{ color: "var(--sb-accent)", fontWeight: 600, cursor: "pointer" }}>
-                Sign in
-              </span>
-            </>
-          )}
-        </p>
-      </div>
-    </div>
-  );
-}
-
-
-export default function CombinedAuth() {
-  const { user, loading, loginWithEmail, signUpWithEmail } = useAuth();
-  const navigate = useNavigate();
-
-  const [mode, setMode] = useState("login");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [msg, setMsg] = useState("");
-  const [err, setErr] = useState("");
-
-  useEffect(() => {
-    if (!loading && user) navigate("/");
-  }, [user, loading]);
-
-  const reset = () => {
-    setMsg("");
-    setErr("");
-  };
-
-  // -------------------------------
-  // PASSWORD VALIDATION RULES
-  // -------------------------------
-  const validatePassword = (pwd, email) => {
-    if (pwd.length < 8) return "Password must be at least 8 characters.";
-
-    if (!/[A-Z]/.test(pwd))
-      return "Password must contain at least one uppercase letter.";
-
-    if (!/[0-9]/.test(pwd))
-      return "Password must contain at least one number.";
-
-    if (!/[!@#$%^&*()_\-+=<>?{}]/.test(pwd))
-      return "Password must contain at least one special character.";
-
-    const username = email.split("@")[0];
-    if (pwd.toLowerCase().includes(username.toLowerCase()))
-      return "Password cannot contain your username.";
-
-    const weakList = ["password", "123456", "qwerty", "abc123"];
-    if (weakList.includes(pwd.toLowerCase()))
-      return "Password is too weak.";
-
-    return null;
-  };
-
-  // -------------------------------
-  // LOGIN
-  // -------------------------------
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    reset();
-    setBusy(true);
-
-    const { error } = await loginWithEmail(email, password);
-    if (error) setErr(error.message);
-    else setMsg("Logged in!");
-
-    setBusy(false);
-  };
-
-  // -------------------------------
-  // SIGNUP
-  // -------------------------------
-  const handleSignup = async (e) => {
-    e.preventDefault();
-    reset();
-
-    // password match check
-    if (password !== confirmPassword)
-      return setErr("Passwords do not match.");
-
-    // strong password validation
-    const validationError = validatePassword(password, email);
-    if (validationError) return setErr(validationError);
-
-    setBusy(true);
-
-    const { error } = await signUpWithEmail(email, password);
-    if (error) setErr(error.message);
-    else setMsg("Signup successful! Please check your email to verify.");
-
-    setBusy(false);
-  };
-
-  // -------------------------------
-  // UI
-  // -------------------------------
-  return (
-    <div
-      className="min-h-screen flex justify-center items-center"
-      style={{ background: "var(--sb-bg)" }}
-    >
-      <div
-        className="w-full max-w-md p-6 rounded-xl shadow-lg"
-        style={{ background: "var(--sb-card)", color: "var(--sb-text)" }}
-      >
-        <h2 className="text-2xl font-bold mb-4 text-center">
-          {mode === "login" ? "Login" : "Create an Account"}
-        </h2>
-
-  {err && <p style={{ color: "#ef4444" }} className="text-sm mb-2">{err}</p>}
-  {msg && <p style={{ color: "#22c55e" }} className="text-sm mb-2">{msg}</p>}
-
-        <form onSubmit={mode === "login" ? handleLogin : handleSignup}>
-          <input
-            type="email"
-            placeholder="Email"
-            className="w-full p-3 border rounded-md mb-3"
-            style={{
-              background: "var(--sb-card)",
-              color: "#000",
-              border: "1px solid var(--sb-border)",
-            }}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full p-3 border rounded-md mb-3"
-            style={{
-              background: "var(--sb-card)",
-              color: "#000",
-              border: "1px solid var(--sb-border)",
-            }}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-
-          {mode === "signup" && (
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              className="w-full p-3 border rounded-md mb-3"
-              style={{
-                background: "var(--sb-card)",
-                color: "#000",
-                border: "1px solid var(--sb-border)",
-              }}
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-            />
-          )}
-
-          <button
-            type="submit"
-            disabled={busy}
-            className="w-full p-3 rounded-md"
-            style={{
-              background: "var(--sb-accent)",
-              color: "var(--sb-button-text)",
-              opacity: busy ? 0.7 : 1,
-              cursor: busy ? "not-allowed" : "pointer",
-              fontWeight: 600,
-              fontSize: "1rem",
-              border: "none",
-            }}
-          >
-            {busy ? "Please wait..." : mode === "login" ? "Login" : "Sign Up"}
-          </button>
-        </form>
-
-        <p className="mt-4 text-center text-sm">
-          {mode === "login" ? (
             <>
               Don't have an account?{" "}
-              <span
-                className="cursor-pointer"
-                style={{ color: "var(--sb-accent)", fontWeight: 500 }}
-                onClick={() => setMode("signup")}
-              >
+              <span onClick={() => switchMode("signup")} style={{ color: "var(--sb-accent)", fontWeight: 600, cursor: "pointer" }}>
                 Sign up
               </span>
             </>
           ) : (
             <>
               Already have an account?{" "}
-              <span
-                className="cursor-pointer"
-                style={{ color: "var(--sb-accent)", fontWeight: 500 }}
-                onClick={() => setMode("login")}
-              >
-                Login
+              <span onClick={() => switchMode("login")} style={{ color: "var(--sb-accent)", fontWeight: 600, cursor: "pointer" }}>
+                Sign in
               </span>
             </>
           )}
