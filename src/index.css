@@ -56,6 +56,11 @@ input[type="number"] {
   -webkit-text-fill-color: #000 !important; /* fixes autofill/Chromium */
 }
 
-/* Do not change placeholder styling here; leave placeholders to theme.
-   If you want black placeholders too, add ::placeholder rules.
-*/
+/* Placeholder styling (default text in text boxes) */
+input::placeholder,
+textarea::placeholder,
+select::placeholder {
+  color: #9CA3AF !important;
+  -webkit-text-fill-color: #9CA3AF !important;
+  opacity: 1 !important;
+}
