@@ -510,7 +510,6 @@ export default function LandingPage() {
           <div style={{ position: "absolute", bottom: -40, left: -40, width: 200, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(233,118,43,0.12), transparent 70%)", filter: "blur(30px)" }} />
 
           <div style={{ position: "relative", zIndex: 1 }}>
-            <img src="/safebite-logo.png" alt="SafeBite" style={{ width: 64, height: 64, objectFit: "contain", marginBottom: "1.25rem" }} />
             <h2 style={{ fontSize: "clamp(1.75rem, 4vw, 2.5rem)", fontWeight: 900, letterSpacing: "-0.02em", color: css.text, marginBottom: "0.75rem" }}>
               Your health, your rules
             </h2>
