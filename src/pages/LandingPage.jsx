@@ -396,42 +396,18 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ─── APP MOCKUP SECTION ───────────────────────────────────── */}
+      {/* ─── APP EXPERIENCE SECTION ───────────────────────────────────── */}
       <section style={{ padding: "5rem 1.5rem", position: "relative", overflow: "hidden" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: "3rem" }}>
-            <span style={{ fontSize: "0.8rem", fontWeight: 700, color: css.accent, letterSpacing: "0.1em", textTransform: "uppercase" }}>See It In Action</span>
+          <div style={{ textAlign: "center" }}>
+            <span style={{ fontSize: "0.8rem", fontWeight: 700, color: css.accent, letterSpacing: "0.1em", textTransform: "uppercase" }}>Anywhere, Anytime</span>
             <h2 style={{ fontSize: "clamp(1.75rem, 4vw, 2.75rem)", fontWeight: 800, marginTop: "0.5rem", letterSpacing: "-0.02em", color: css.text }}>
               Built for every device,{" "}
               <span style={{ color: css.accent }}>for every diet</span>
             </h2>
             <p style={{ color: css.muted, maxWidth: 480, margin: "0.75rem auto 0", lineHeight: 1.6 }}>
-              Light mode, dark mode, mobile or desktop — SafeBite adapts to you.
+              Whether you're on mobile or desktop, SafeBite adapts to your lifestyle to keep you safe on the go.
             </p>
-          </div>
-
-          {/* Mockup image */}
-          <div style={{
-            borderRadius: "1.5rem",
-            overflow: "hidden",
-            border: `1px solid ${css.border}`,
-            boxShadow: `0 24px 80px rgba(0,0,0,0.15)`,
-            background: css.card,
-            maxWidth: 900,
-            margin: "0 auto",
-            position: "relative",
-          }}>
-            {/* Decorative corner accents */}
-            <div style={{ position: "absolute", top: 16, left: 16, width: 8, height: 8, borderRadius: "50%", background: "#E9762B" }} />
-            <div style={{ position: "absolute", top: 16, left: 30, width: 8, height: 8, borderRadius: "50%", background: css.accent }} />
-            <div style={{ position: "absolute", top: 16, left: 44, width: 8, height: 8, borderRadius: "50%", background: css.border }} />
-            <img
-              src="/safebite-mockup.png"
-              alt="SafeBite app showing dark and light mode"
-              style={{ width: "100%", display: "block", objectFit: "cover" }}
-            />
-            {/* Overlay gradient fade at bottom */}
-            <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 80, background: `linear-gradient(to top, ${css.card}, transparent)` }} />
           </div>
         </div>
       </section>

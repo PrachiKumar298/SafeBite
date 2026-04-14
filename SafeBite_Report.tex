@@ -1,0 +1,505 @@
+% SafeBite Project Report
+\documentclass[12pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\geometry{margin=1in}
+\onehalfspacing
+\title{SafeBite: Website Project Report}
+\author{Team SafeBite}
+\date{April 2026}
+
+\begin{document}
+\begin{titlepage}
+  \centering
+  {\Large \textbf{SafeBite}}\\[1em]
+  {\large Website Project Report}\\[2em]
+  {\large Department of Computer Science}\\[0.5em]
+  {\large April 2026}\\[4em]
+  {\large Submitted by:}\\[0.5em]
+  {\large Team SafeBite}\\[0.5em]
+  {\large Guide: Prof. [Name]}\\[8em]
+  \vfill
+  \vspace{2em}
+\end{titlepage}
+
+\pagenumbering{roman}
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+SafeBite is a web-based allergy and food safety assistant developed as a responsive React application. The system provides users with a single destination to check allergen information, search medicines, save recipes, and receive personalized dietary recommendations. This report documents the objectives, design, technology stack, implementation details, database design, and future enhancements for the project.
+
+\vfill
+\tableofcontents
+\cleardoublepage
+\pagenumbering{arabic}
+
+\chapter{Introduction}
+SafeBite is a web-based application designed to help users manage and avoid allergens in food, medicines, and recipes. The platform provides features for checking food safety, tracking allergies, and discovering safe meal options. The need for SafeBite is driven by growing dietary restrictions and the widespread presence of allergens in everyday products.
+
+The application is especially useful for people with food allergies, intolerance conditions, and those who require better nutrition guidance. It allows users to quickly evaluate ingredients, review product safety, and plan meals that match their personal health requirements.
+
+\section{Objective of the Project}
+The objective of SafeBite is to develop a practical website that reduces risk of allergen exposure while simplifying healthy meal planning. The main goals are:
+\begin{itemize}
+  \item Provide allergy-aware product and recipe recommendations.
+  \item Support quick checks for food safety and medicine compatibility.
+  \item Offer a user-friendly experience for managing dietary preferences.
+  \item Enable secure user registration and profile management.
+\end{itemize}
+
+The project proposal focuses on building a functional prototype with strong UX, a modular architecture, and clear documentation for deployment.
+
+\section{Brief Description of the Project}
+SafeBite is built as a modern React application with a clean and responsive interface. It includes dedicated modules for allergies, food safety, medicine checking, and recipe management. The site is designed so that users can navigate easily between different safety tools without feeling overwhelmed.
+
+Key functional areas include:
+\begin{itemize}
+  \item Allergy management and preference settings
+  \item Food safety checker with ingredient evaluation
+  \item Medicine compatibility lookup
+  \item Recipe discovery and saving system
+  \item Personalized recommendations based on user data
+\end{itemize}
+
+\chapter{Technology Used}
+The major technologies used in the SafeBite project are:
+\begin{itemize}
+  \item React 18 for building the frontend user interface.
+  \item Vite for fast development server and optimized bundling.
+  \item Tailwind CSS for utility-first styling and responsive design.
+  \item Supabase for authentication, database storage, and backend API support.
+  \item React Router DOM for client-side routing and page navigation.
+  \item JavaScript and JSX as primary development languages.
+\end{itemize}
+
+Additional tools and techniques include Git for version control, browser developer tools for debugging, and manual testing for cross-platform compatibility.
+
+\section{Hardware Requirement}
+The hardware requirements for developing and running SafeBite include:
+\begin{itemize}
+  \item A personal computer or laptop with at least 4 GB of RAM.
+  \item A modern multi-core processor for smooth development and local preview execution.
+  \item 10 GB of free disk space for project files, dependencies, and build artifacts.
+  \item A reliable internet connection to access cloud services such as Supabase.
+  \item A display capable of showing responsive layouts across desktop and tablet widths.
+\end{itemize}
+
+\section{Software Requirement}
+The software environment needed to develop and test SafeBite includes:
+\begin{itemize}
+  \item Node.js (version 16 or higher) and npm or yarn as the package manager.
+  \item Vite as the primary build tool and development server.
+  \item Visual Studio Code or a similar code editor.
+  \item A modern web browser such as Chrome, Firefox, Safari, or Edge.
+  \item Supabase account for backend database and authentication services.
+  \item Git for source control and project versioning.
+\end{itemize}
+
+\chapter{Organization Profile}
+SafeBite is developed as a project within the Department of Computer Science. The team consists of students working under faculty supervision to design and implement a web-based dietary management solution.
+
+For academic projects, the organization profile typically includes the institution name, department, course details, and the roles of team members. If this project is later adopted by an organization, details such as mission, target users, and development team capabilities would also be described.
+
+\chapter{Design Description}
+SafeBite follows a component-driven design strategy. Each feature is encapsulated in reusable React components, enabling easier maintenance and extension.
+
+The application is designed with the following principles:
+\begin{itemize}
+  \item Modular structure for each page and feature.
+  \item Responsive layout for desktop and mobile screens.
+  \item Clear navigation with a persistent menu bar.
+  \item Consistent visual styling using Tailwind CSS utilities.
+\end{itemize}
+
+\section{System Architecture}
+The system architecture is a client-side React SPA with backend services provided by Supabase. The architecture consists of:
+\begin{itemize}
+  \item Frontend components for user interaction.
+  \item Routing layer for page transitions.
+  \item API client to communicate with Supabase.
+  \item Authentication layer for secure user access.
+  \item Database layer for storing user, recipe, and allergy data.
+\end{itemize}
+
+This separation of concerns allows SafeBite to remain extensible and maintainable.
+
+\section{Flow Chart}
+The flow chart shows the main user interactions and system flow for SafeBite. Below is the comprehensive UML flowchart representing the complete user journey and system processes.
+
+\subsection{Main System Flow}
+\begin{figure}[h!]
+  \centering
+  \fbox{\parbox[c][10cm][c]{0.95\textwidth}{
+    \textbf{SafeBite User Interaction Flow}\\[0.3cm]
+    \small
+    \begin{tabular}{|c|l|}
+    \hline
+    \textbf{Step} & \textbf{Action/Process} \\
+    \hline
+    1 & User visits SafeBite website \\
+    \hline
+    2 & Authentication Check: Logged in? \\
+    \hline
+    3 & NO $\rightarrow$ Display Landing Page \\
+    \hline
+    4 & User chooses: Sign Up OR Login \\
+    \hline
+    5 & Registration: Email, Password, Profile Details \\
+    \hline
+    6 & Set Initial Allergies \& Preferences \\
+    \hline
+    7 & YES $\rightarrow$ Redirect to Dashboard \\
+    \hline
+    8 & Dashboard displays 6 main modules \\
+    \hline
+    9 & User selects desired module \\
+    \hline
+    10 & System processes request \\
+    \hline
+    11 & Fetch from database \& analyze \\
+    \hline
+    12 & Generate result with warnings \\
+    \hline
+    13 & Display result to user \\
+    \hline
+    14 & User action: Save/Share/Continue \\
+    \hline
+    15 & Return to Dashboard or Logout \\
+    \hline
+    \end{tabular}
+  }}
+  \caption{Main SafeBite System Flowchart}
+\end{figure}
+
+\subsection{Module-Specific Flows}
+
+\textbf{1. Allergy Management Flow:}
+\begin{figure}[h!]
+  \centering
+  \fbox{\parbox[c][6cm][c]{0.95\textwidth}{
+    \texttt{
+    User Opens Allergies Module\\
+    \quad $\Downarrow$\\
+    Display Current Allergies\\
+    \quad $\Downarrow$\\
+    User Selects/Deselects Allergens\\
+    \quad $\Downarrow$\\
+    Validate Input Data\\
+    \quad $\Downarrow$\\
+    Save to Database\\
+    \quad $\Downarrow$\\
+    Update Recommendation Engine\\
+    \quad $\Downarrow$\\
+    Display Success Message
+    }
+  }}
+  \caption{Allergy Management Module Flow}
+\end{figure}
+
+\textbf{2. Food Safety Checker Flow:}
+\begin{figure}[h!]
+  \centering
+  \fbox{\parbox[c][7cm][c]{0.95\textwidth}{
+    \texttt{
+    User Enters Food/Product Name\\
+    \quad $\Downarrow$\\
+    Search Food Database\\
+    \quad $\Downarrow$\\
+    Retrieve Ingredient List\\
+    \quad $\Downarrow$\\
+    Cross-Reference with User Allergies\\
+    \quad $\Downarrow$\\
+    Check for Allergen Match\\
+    \quad $\Downarrow$\\
+    \{Allergen Found?\}\\
+    \quad YES $\rightarrow$ Generate Warning Report\\
+    \quad NO $\rightarrow$ Generate Safe Report\\
+    \quad $\Downarrow$\\
+    Display Result to User
+    }
+  }}
+  \caption{Food Safety Checker Flow}
+\end{figure}
+
+\textbf{3. Medicine Checker Flow:}
+\begin{figure}[h!]
+  \centering
+  \fbox{\parbox[c][7cm][c]{0.95\textwidth}{
+    \texttt{
+    User Searches for Medicine\\
+    \quad $\Downarrow$\\
+    Query Medicine Database\\
+    \quad $\Downarrow$\\
+    Extract Medicine Ingredients \& Properties\\
+    \quad $\Downarrow$\\
+    Compare with User Allergies\\
+    \quad $\Downarrow$\\
+    Check Interaction Alerts\\
+    \quad $\Downarrow$\\
+    \{Incompatibility Found?\}\\
+    \quad YES $\rightarrow$ Show Alert/Warning\\
+    \quad NO $\rightarrow$ Confirm Safe\\
+    \quad $\Downarrow$\\
+    Display Compatibility Report
+    }
+  }}
+  \caption{Medicine Checker Module Flow}
+\end{figure}
+
+\textbf{4. Recipe Discovery Flow:}
+\begin{figure}[h!]
+  \centering
+  \fbox{\parbox[c][7cm][c]{0.95\textwidth}{
+    \texttt{
+    User Accesses Recipe Module\\
+    \quad $\Downarrow$\\
+    Display Filter Options\\
+    \quad $\Downarrow$\\
+    User Applies Filters (Allergen, Cuisine, etc.)\\
+    \quad $\Downarrow$\\
+    Query Recipe Database\\
+    \quad $\Downarrow$\\
+    Apply Allergen Filters\\
+    \quad $\Downarrow$\\
+    Generate Safe Recipe List\\
+    \quad $\Downarrow$\\
+    User Selects Recipe\\
+    \quad $\Downarrow$\\
+    Display Recipe Details \& Nutritional Info\\
+    \quad $\Downarrow$\\
+    \{User Action?\}\\
+    \quad SAVE $\rightarrow$ Add to Saved Recipes\\
+    \quad NEXT $\rightarrow$ Show Another Recipe
+    }
+  }}
+  \caption{Recipe Discovery Module Flow}
+\end{figure}
+
+\textbf{5. Recommendation Engine Flow:}
+\begin{figure}[h!]
+  \centering
+  \fbox{\parbox[c][7cm][c]{0.95\textwidth}{
+    \texttt{
+    Trigger Recommendation Request\\
+    \quad $\Downarrow$\\
+    Collect User Data:\\
+    \quad - Allergies Profile\\
+    \quad - Saved Recipes History\\
+    \quad - Search History\\
+    \quad $\Downarrow$\\
+    Query Multiple Databases\\
+    \quad $\Downarrow$\\
+    Apply Safety Filters\\
+    \quad $\Downarrow$\\
+    Rank Results by Relevance\\
+    \quad $\Downarrow$\\
+    Generate Recommendation List\\
+    \quad $\Downarrow$\\
+    Display Personalized Results\\
+    \quad $\Downarrow$\\
+    User Interacts with Results
+    }
+  }}
+  \caption{Recommendation Engine Flow}
+\end{figure}
+
+\section{Data Flow Diagrams (DFDs)}
+\subsection{Level 0 DFD}
+The Level 0 DFD illustrates the primary data sources and consumers in the system, including the user, web browser, and backend database.
+\begin{figure}[h!]
+  \centering
+  \fbox{\parbox[c][8cm][c]{0.9\textwidth}{\centering Insert Level 0 DFD here}}
+  \caption{Level 0 Data Flow Diagram}
+\end{figure}
+
+\subsection{Level 1 DFD}
+The Level 1 DFD breaks down the key modules of the application, such as authentication, allergy management, recipe search, and recommendations.
+\begin{figure}[h!]
+  \centering
+  \fbox{\parbox[c][8cm][c]{0.9\textwidth}{\centering Insert Level 1 DFD here}}
+  \caption{Level 1 Data Flow Diagram}
+\end{figure}
+
+\section{Entity Relationship Diagram (E-R Diagram)}
+The E-R diagram defines the relationships between users, allergies, recipes, saved items, and recommendations.
+\begin{figure}[h!]
+  \centering
+  \fbox{\parbox[c][9cm][c]{0.9\textwidth}{\centering Insert E-R Diagram here}}
+  \caption{Entity Relationship Diagram for SafeBite}
+\end{figure}
+
+\chapter{Project Description}
+SafeBite is composed of several functional modules. Each module is geared toward improving safety, convenience, or personalization.
+
+\section{Landing Page}
+The landing page introduces users to the SafeBite mission and provides quick access to the main modules. It includes calls to action for login, signup, and exploring features.
+
+\begin{figure}[h!]
+  \centering
+  \fbox{\parbox[c][6cm][c]{0.9\textwidth}{\centering Insert landing page screenshot}}
+  \caption{SafeBite Landing Page}
+\end{figure}
+
+\section{Allergies Management}
+The allergies module lets users select known allergens and store personal preferences. This information is used throughout the application to filter recipes and recommendations.
+
+\begin{figure}[h!]
+  \centering
+  \fbox{\parbox[c][6cm][c]{0.9\textwidth}{\centering Insert allergy management screenshot}}
+  \caption{Allergy Management Page}
+\end{figure}
+
+\section{Food Safety Checker}
+The food safety checker allows users to inspect ingredients and determine whether a product is safe for consumption. It provides warnings for flagged allergens and common triggers.
+
+\section{Medicine Checker}
+This module helps users verify medicines against their allergy profile and known sensitivities. It is a valuable tool for individuals with medication-related allergies.
+
+\section{Recipe Discovery and Saving}
+Users can browse recipes, view details, and save favorites. Recipes are classified by ingredients, nutrition, and allergen content.
+
+\section{Personalized Recommendations}
+SafeBite generates recommendations based on user settings and saved history. The recommendation engine can suggest meals, products, or recipes that match dietary restrictions.
+
+\section{User Authentication and Profile}
+The user module supports sign-up, login, and profile editing. It stores personal preferences, allergy data, saved recipes, and recommendation history.
+
+\section{Table Description}
+\begin{longtable}{|p{4cm}|p{4cm}|p{6cm}|}
+  \hline
+  \textbf{Table Name} & \textbf{Primary Keys} & \textbf{Description} \\
+  \hline
+  Users & user_id & Stores user credentials, contact details, and profile preferences. \\
+  \hline
+  Allergies & allergy_id & Stores allergy names, categories, and severity levels for each user. \\
+  \hline
+  Recipes & recipe_id & Stores recipe metadata, ingredients, instructions, and nutrition facts. \\
+  \hline
+  SavedRecipes & saved_id & Stores user-specific saved recipes and timestamps. \\
+  \hline
+  Recommendations & recommendation_id & Stores generated recommendations and the criteria used. \\
+  \hline
+  Medicines & medicine_id & Stores medicine names, ingredients, and safety notes. \\
+  \hline
+  FoodItems & food_item_id & Stores food product names and ingredient breakdowns. \\
+  \hline
+\end{longtable}
+
+\chapter{Database}
+The database is structured to support users, allergies, recipes, saved recipes, and recommendations. Supabase is used as the backend database service with tables storing structured records and relationships.
+
+The database design emphasizes:
+\begin{itemize}
+  \item Data consistency across user preferences and recommendations.
+  \item Scalability for additional recipe and allergy entries.
+  \item Security for user profile and authentication information.
+\end{itemize}
+
+\chapter{File/Database Design}
+The file architecture and database schema have been designed to minimize duplication and facilitate reuse.
+
+\section{Frontend File Structure}
+The frontend uses a component-based structure with files organized as follows:
+\begin{itemize}
+  \item \texttt{src/App.jsx} for main application layout.
+  \item \texttt{src/index.css} for global styling.
+  \item \texttt{src/pages/} for each page view.
+  \item \texttt{src/components/} for reusable UI elements.
+  \item \texttt{src/services/} for API and data access logic.
+\end{itemize}
+
+\section{Database Schema}
+The database schema includes the following relationships:
+\begin{itemize}
+  \item One-to-many relationship between \texttt{Users} and \texttt{Allergies}.
+  \item One-to-many relationship between \texttt{Users} and \texttt{SavedRecipes}.
+  \item One-to-many relationship between \texttt{Recipes} and \texttt{Recommendations}. 
+\end{itemize}
+
+\chapter{Testing \\& Tools Used}
+Testing for SafeBite is performed through a mixture of automated and manual processes. Since the application is UI-centric, manual user testing and browser compatibility checks are especially important.
+
+\section{Functional Testing}
+Functional tests verify that individual features work correctly:
+\begin{itemize}
+  \item Registration, login, and logout workflows.
+  \item Allergy data entry and profile save operations.
+  \item Search and recommendation queries.
+  \item Recipe save and retrieval workflows.
+\end{itemize}
+
+\section{Usability and Compatibility Testing}
+Usability testing checks the interface across devices:
+\begin{itemize}
+  \item Responsive layout on desktop, tablet, and mobile.
+  \item Navigation clarity and information hierarchy.
+  \item Form validation and user error handling.
+  \item Browser compatibility with Chrome, Firefox, and Safari.
+\end{itemize}
+
+\section{Tools Used}
+The testing tools and techniques include:
+\begin{itemize}
+  \item Browser developer tools for inspecting HTML, CSS, and network activity.
+  \item Manual walkthroughs for user flows and error conditions.
+  \item Console logging for tracking API requests and application state.
+  \item Peer review and feedback sessions to identify improvements.
+\end{itemize}
+
+\chapter{Implementation \\& Maintenance}
+The implementation of SafeBite is divided into frontend development, backend integration, and deployment preparation.
+
+\section{Implementation Approach}
+Key implementation activities include:
+\begin{itemize}
+  \item Setting up the Vite development environment.
+  \item Creating reusable React components for layouts and forms.
+  \item Building page-level logic for each module.
+  \item Integrating Supabase for authentication and data storage.
+  \item Styling the app with Tailwind CSS to ensure consistent UX.
+\end{itemize}
+
+\section{Maintenance Strategy}
+The maintenance plan focuses on keeping dependencies up to date and monitoring application health.
+\begin{itemize}
+  \item Regular dependency updates for React, Tailwind, and Supabase.
+  \item Periodic review of security practices and authentication flows.
+  \item User feedback collection for continuous feature improvement.
+  \item Documentation updates as the application expands.
+\end{itemize}
+
+\chapter{Conclusion and Future Work}
+SafeBite provides a solid foundation for an allergy-aware dietary assistant website. It demonstrates the viability of using modern web technologies to help users manage food and medicine safety.
+
+Future work may include:
+\begin{itemize}
+  \item Adding machine learning models for personalized recommendations.
+  \item Expanding the database with more food and medicine entries.
+  \item Introducing multilingual support for broader adoption.
+  \item Implementing a mobile application or native wrapper.
+  \item Adding offline mode and local cache for emergency access.
+\end{itemize}
+
+\chapter{Outcome}
+Based on current completion, SafeBite is positioned as a deployment-ready web application. The project outcome is primarily deployment-based, with the potential to evolve into a research paper or extended product if additional evaluation and user studies are performed.
+
+The current progress indicates a working prototype with core functionality, making deployment the most appropriate next step. With further refinement, the system could also support academic publication or patent documentation depending on innovation and unique features.
+
+\chapter{Bibliography}
+\begin{itemize}
+  \item React documentation: https://react.dev
+  \item Tailwind CSS documentation: https://tailwindcss.com/docs
+  \item Supabase documentation: https://supabase.com/docs
+  \item Vite documentation: https://vitejs.dev
+  \item Web accessibility and responsive design best practices.
+\end{itemize}
+
+\end{document}
